@@ -5,6 +5,15 @@ export default Ember.Component.extend({
 
   showingCard: function() {
     return this.get('cards.lastObject');
-  }.property('cards')
+  }.property('cards'),
 
+  doubleClick: function() {
+    this.send('finishCard');
+  },
+
+  actions: {
+    finishCard: function() {
+      this.sendAction('finishCard', this.get('showingCard'));
+    }
+  }
 });

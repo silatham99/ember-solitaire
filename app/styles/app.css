@@ -3,30 +3,29 @@ body {
   font-family: 'Open Sans Condensed', sans-serif;
 }
 
-.game-container {
-  .playing-field {
-
-    .upper-field {
-
-    }
-
-    .lower-field {
-
-    }
-  }
+.upper-field {
+  margin-bottom: 30px;
 }
 
-.flipping-deck {
-
-}
-
-
-.card-stack {
-  display: inline-block;
-  margin-right: 20px;
+.finished-stacks {
+  position: relative;
+  float: right;
 }
 
 .playing-card {
   height: 156px;
   width: 112px;
+}
+
+.flipping-deck > .playing-card {
+  display: inline-block;
+}
+
+.flipping-deck > .playing-card + .playing-card {
+  margin-left: -70px;
+}
+
+.card-stack {
+  display: inline-block;
+  margin-right: 20px;
 }

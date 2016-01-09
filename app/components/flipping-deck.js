@@ -21,12 +21,16 @@ export default Ember.Component.extend({
     }
   }.property('deckPosition', 'cards.length'),
 
+  doubleClick: function() {
+    this.send('finishCard');
+  },
+
   actions: {
     flipCards: function() {
       this.set('deckPosition', this.get('nextPosition'));
     },
-    applyCard: function() {
-
+    finishCard: function() {
+      this.sendAction('finishCard', this.get('showingCards.lastObject'));
     }
   }
 });
