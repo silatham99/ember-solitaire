@@ -1,0 +1,32 @@
+body {
+  background-color: #eee;
+  font-family: 'Open Sans Condensed', sans-serif;
+}
+
+.game-container {
+  .playing-field {
+
+    .upper-field {
+
+    }
+
+    .lower-field {
+
+    }
+  }
+}
+
+.flipping-deck {
+
+}
+
+
+.card-stack {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.playing-card {
+  height: 156px;
+  width: 112px;
+}
