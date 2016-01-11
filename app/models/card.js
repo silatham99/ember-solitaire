@@ -8,9 +8,9 @@ export default DS.Model.extend({
   visible: DS.attr(),
   photoSrc: function() {
     if (this.get('visible')) {
-			return this.assets.resolve("/images/" + this.get('suit') + this.get('cardNumber') + ".png");
+			return "images/cards/" + this.get('suit') + this.get('cardNumber') + ".png";
 		} else {
-			return this.assets.resolve("/images/ember-card.png");
+			return "images/ember-card.png";
 		}
 	}.property('suit', 'cardNumber', 'visible')
 });

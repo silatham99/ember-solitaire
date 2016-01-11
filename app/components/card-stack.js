@@ -13,17 +13,17 @@ export default Ember.Component.extend(GameLogic, {
     });
   },
 
-  doubleClick: function() {
+  doubleClick() {
     if (this.canFinishCard(this.get('cards'), this.get('showingCard'))) {
       this.sendAction('updateCard', this.get('showingCard'), { location: this.get('showingCard.suit') });
     }
   },
 
-  dragOver: function(event) {
+  dragOver(event) {
     event.preventDefault();
   },
 
-  drop: function(event) {
+  drop(event) {
     var dropData = event.dataTransfer.getData('card');
     if (!dropData) { return false; }
     var card = JSON.parse(dropData);
@@ -37,23 +37,25 @@ export default Ember.Component.extend(GameLogic, {
     }
   },
 
-  cardsInStack: function() {
+  cardsInStack: Ember.computed('cards.@each.location', 'stackNumber', function() {
     return this.get('cards').filterBy('location', this.get('stackNumber')).sortBy('sortOrder');
-  }.property('cards.@each.location', 'stackNumber'),
+  }),
 
-  showingCard: function() {
+  showingCard: Ember.computed('cardsInStack.@each.sortOrder', 'isEmpty', function() {
     if (this.get('isEmpty')) { return undefined; }
     return this.get('cardsInStack').reduce(function(max, item) {
       if (isNaN(item.get('sortOrder'))) { return max; }
       return max.get('sortOrder') > item.get('sortOrder') ? max : item
     });
-  }.property('cardsInStack.@each.sortOrder', 'isEmpty'),
+  }),
 
-  showNextCard: function() {
-    this.sendAction('updateCard', this.get('showingCard'), { visible: true });
-  }.observes('showingCard'),
+  showNextCard: Ember.computed('cardsInStack.@each.visible', function() {
+    if (this.get('cardsInStack').filterBy('visible', true).length === 0) {
+      return this.sendAction('updateCard', this.get('showingCard'), { visible: true });
+    }
+  }),
 
-  isEmpty: function() {
+  isEmpty: Ember.computed('cardsInStack.length', function() {
     return this.get('cardsInStack.length') === 0;
-  }.property('cardsInStack.length')
+  })
 });
