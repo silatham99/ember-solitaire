@@ -1,3 +1,5 @@
-{{#each card in cards}}
-	<span>{{playing-card card=card}}</span>
-{{/each}}
+{{#if isEmpty}}
+	{{partial 'empty-card'}}
+{{else}}
+	{{playing-card card=showingCard}}
+{{/if}}

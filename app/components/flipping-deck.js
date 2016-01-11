@@ -5,24 +5,28 @@ export default Ember.Component.extend({
 
   deckPosition: 0,
 
+  cardsInStack: function() {
+    return this.get('cards').filterBy('location', 'f');
+  }.property('cards'),
+
   showingCards: function() {
     if (this.get('nextPosition') > this.get('deckPosition')) {
-      return this.get('cards').slice(this.get('deckPosition'), this.get('nextPosition'));
+      return this.get('cardsInStack').slice(this.get('deckPosition'), this.get('nextPosition'));
     } else {
-      return this.get('cards').slice(this.get('deckPosition'), this.get('cards.length'));
+      return this.get('cardsInStack').slice(this.get('deckPosition'), this.get('cardsInStack.length'));
     }
-  }.property('deckPosition', 'nextPosition', 'cards.length'),
+  }.property('deckPosition', 'nextPosition', 'cardsInStack.length'),
 
   nextPosition: function() {
-    if (this.get('cards.length') > this.get('deckPosition') + 3) {
+    if (this.get('cardsInStack.length') > this.get('deckPosition') + 3) {
       return this.get('deckPosition') + 3;
     } else {
-      return this.get('cards.length') - this.get('deckPosition');
+      return this.get('cardsInStack.length') - this.get('deckPosition');
     }
-  }.property('deckPosition', 'cards.length'),
+  }.property('deckPosition', 'cardsInStack.length'),
 
   doubleClick: function() {
-    this.send('finishCard');
+    this.send('flipCards');
   },
 
   actions: {
@@ -30,7 +34,8 @@ export default Ember.Component.extend({
       this.set('deckPosition', this.get('nextPosition'));
     },
     finishCard: function() {
-      this.sendAction('finishCard', this.get('showingCards.lastObject'));
+      var card = this.get('showingCards.lastObject');
+      this.sendAction('moveCard', card, card.get('suit'));
     }
   }
 });

@@ -2,18 +2,20 @@ import Ember from 'ember';
 
 export default Ember.Mixin.create({
 	generateNewDeck: function() {
-		var suits = ['S','C','H','D'],
-			cardNumbers = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'],
-			unusedLocations = this.getNewLocations(),
-			deck;
+		var	store = this.get('store'),
+				suits = ['s','c','h','d'],
+				cardNumbers = ['a', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'j', 'q', 'k'],
+				unusedLocations = this.getNewLocations(),
+				deck;
 
 		deck = [].concat.apply([], suits.map(function(suit) {
 			return cardNumbers.map(function(cardNumber) {
-				return { 
+				return store.createRecord('card', {
+					id: suit + cardNumber,
 					suit: suit,
 				 	cardNumber: cardNumber,
 				 	location: unusedLocations.pop()
-			  	};
+				});
 			});
 		}));
 
@@ -32,7 +34,7 @@ export default Ember.Mixin.create({
 		}
 
 		// Allocate the rest of the cards to the flipping deck
-		for (remainingLocations = locations.length; remainingLocations < 52; remainingLocations++) { 
+		for (remainingLocations = locations.length; remainingLocations < 52; remainingLocations++) {
 			locations.push('f');
 		}
 
@@ -54,5 +56,26 @@ export default Ember.Mixin.create({
 		}
 
 		return clone;
+	},
+
+	maxCard: function(cards) {
+		return cards.reduce(function(max, card) {
+      if (card.get('cardNumber') === 'k') {
+				return card;
+      } else if (card.get('cardNumber') === 'q') {
+			 	return max.get('cardNumber') === 'k' ? max : card;
+		 	} else if (card.get('cardNumber') === 'j') {
+			  return (max.get('cardNumber') === 'k' || max.get('cardNumber') === 'q') ? max : card;
+			} else if (card.get('cardNumber') === 'a') {
+				return (max.get('cardNumber') === 'k' || max.get('cardNumber') === 'q' ||
+								max.get('cardNumber') === 'j' || !isNaN(max.get('cardNumber'))) ? max : card;
+			} else {
+				return (max.get('cardNumber') > card.get('cardNumber')) ? max : card;
+			}
+    });
+	},
+
+	cardsInLocation: function(cards, location) {
+		return cards.filterBy('location', location);
 	}
 });

@@ -4,17 +4,31 @@ body {
 }
 
 .upper-field {
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .finished-stacks {
+  width: 50%;
   position: relative;
   float: right;
+  display: inline-block;
+}
+
+.finished-stacks > .finish-stack {
+  margin-left: 30px;
+  display: inline-block;
 }
 
 .playing-card {
   height: 156px;
   width: 112px;
+  -moz-user-select: none;
+  -khtml-user-drag: element;
+  cursor: move;
+}
+
+.flipping-deck {
+  display: inline-block;
 }
 
 .flipping-deck > .playing-card {
