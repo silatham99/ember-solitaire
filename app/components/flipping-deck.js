@@ -1,13 +1,14 @@
 import Ember from 'ember';
+import GameLogic from '../mixins/game-logic';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(GameLogic, {
   classNames: ['flipping-deck'],
 
   deckPosition: 0,
 
   cardsInStack: function() {
     return this.get('cards').filterBy('location', 'f');
-  }.property('cards'),
+  }.property('cards.@each.location'),
 
   showingCards: function() {
     if (this.get('nextPosition') > this.get('deckPosition')) {
@@ -25,16 +26,15 @@ export default Ember.Component.extend({
     }
   }.property('deckPosition', 'cardsInStack.length'),
 
-  doubleClick: function() {
-    this.send('flipCards');
+  click: function(event) {
+    if ($(event.target).hasClass('deck')) {
+      this.set('deckPosition', this.get('nextPosition'));
+    }
   },
 
-  actions: {
-    flipCards: function() {
-      this.set('deckPosition', this.get('nextPosition'));
-    },
-    finishCard: function() {
-      var card = this.get('showingCards.lastObject');
+  doubleClick: function(event) {
+    var card = this.get('showingCards.lastObject');
+    if (this.canFinishCard(this.get('cards'), card)) {
       this.sendAction('moveCard', card, card.get('suit'));
     }
   }

@@ -1,13 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-	classNames: ['playing-card'],
+	classNameBindings: ['movable:movable', ':playing-card'],
 	attributeBindings: ['style', 'draggable'],
 
 	draggable: true,
 
 	dragStart: function(event) {
-    return event.dataTransfer.setData('card', this.get('card.id'));
+		var card = { id: this.get('card.id'), cardNumber: this.get('card.cardNumber'), suit: this.get('card.suit') };
+    return event.dataTransfer.setData('card', JSON.stringify(card));
   },
 
 	style: function() {

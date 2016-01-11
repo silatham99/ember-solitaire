@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import PlayingDeck from '../mixins/playing-deck';
+import GameLogic from '../mixins/game-logic';
 
-export default Ember.Component.extend(PlayingDeck, {
+export default Ember.Component.extend(PlayingDeck, GameLogic, {
   attributeBindings: ['style'],
   classNames: ['finish-stack'],
 
@@ -10,8 +11,10 @@ export default Ember.Component.extend(PlayingDeck, {
   },
 
   drop: function(event) {
-    var cardId = event.dataTransfer.getData('card');
-    this.sendAction('moveCard', cardId, this.get('suit'));
+    var card = JSON.parse(event.dataTransfer.getData('card'));
+    if (this.canFinishCard(this.get('cards'), Ember.Object.create(card))) {
+      this.sendAction('moveCard', card.id, this.get('suit'));
+    }
   },
 
 	style: function() {

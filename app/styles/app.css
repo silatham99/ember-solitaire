@@ -24,7 +24,14 @@ body {
   width: 112px;
   -moz-user-select: none;
   -khtml-user-drag: element;
+}
+
+.playing-card.movable {
   cursor: move;
+}
+
+.playing-card.deck {
+  margin-right: 70px;
 }
 
 .flipping-deck {

@@ -1,10 +1,13 @@
 import Ember from 'ember';
+import GameLogic from '../mixins/game-logic';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(GameLogic, {
   classNames: ['card-stack'],
 
   doubleClick: function() {
-    this.sendAction('moveCard', this.get('showingCard'), this.get('showingCard.suit'));
+    if (this.canFinishCard(this.get('cards'), this.get('showingCard'))) {
+      this.sendAction('moveCard', this.get('showingCard'), this.get('showingCard.suit'));
+    }
   },
 
   dragOver: function(event) {
@@ -12,8 +15,10 @@ export default Ember.Component.extend({
   },
 
   drop: function(event) {
-    var cardId = event.dataTransfer.getData('card');
-    this.sendAction('moveCard', cardId, this.get('stackNumber'));
+    var card = JSON.parse(event.dataTransfer.getData('card'));
+    if (this.canStackCard(Ember.Object.create(card), this.get('showingCard'))) {
+      this.sendAction('moveCard', card.id, this.get('stackNumber'));
+    }
   },
 
   cardsInStack: function() {

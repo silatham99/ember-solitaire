@@ -21,7 +21,32 @@ export default Ember.Mixin.create(PlayingDeck, {
     }
   },
 
-  canStackCard: function(cards, card, stack) {
-    var stackedCards = this.cardsInLocation(cards, stack);
+  oppositeSuit: function(cardOne, cardTwo) {
+    if (cardOne.get('suit') === 's' || cardOne.get('suit') === 'c') {
+      return cardTwo.get('suit') === 'd' || cardTwo.get('suit') === 'h';
+    } else if (cardOne.get('suit') === 'd' || cardOne.get('suit') === 'h') {
+      return cardTwo.get('suit') === 's' || cardTwo.get('suit') === 'c';
+    }
+  },
+
+  canStackCard: function(newCard, existingCard) {
+    if (existingCard.get('cardNumber') === 'a') {
+      return false;
+    } else if (existingCard.get('cardNumber') === 2) {
+      return newCard.get('cardNumber') === 'a' &&
+        this.oppositeSuit(newCard, existingCard);
+    } else if (!isNaN(existingCard.get('cardNumber'))) {
+      return newCard.get('cardNumber') === (existingCard.get('cardNumber') - 1) &&
+        this.oppositeSuit(newCard, existingCard);
+    } else if (existingCard.get('cardNumber') === 'j') {
+      return newCard.get('cardNumber') === 10 &&
+        this.oppositeSuit(newCard, existingCard);
+    } else if (existingCard.get('cardNumber') === 'q') {
+      return newCard.get('cardNumber') === 'j' &&
+        this.oppositeSuit(newCard, existingCard);
+    } else if (existingCard.get('cardNumber') === 'k') {
+      return newCard.get('cardNumber') === 'q' &&
+        this.oppositeSuit(newCard, existingCard);
+    }
   }
 });

@@ -11,10 +11,7 @@ export default Ember.Controller.extend(GameLogic, {
         card = this.store.getById('card', card);
       }
 
-      debugger;
-
-      if (finishStacks.indexOf(newLocation) !== -1 && this.canFinishCard(this.get('model'), card) ||
-          cardStacks.indexOf(newLocation) !== -1 && this.canStackCard(this.get('model', card, newLocation))) {
+      if (finishStacks.indexOf(newLocation) !== -1 || cardStacks.indexOf(newLocation) !== -1) {
         card.set('location', newLocation);
       }
     }
