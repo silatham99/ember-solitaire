@@ -9,7 +9,7 @@ export default Ember.Component.extend(GameLogic, {
   didInsertElement() {
     var self = this;
     self.get('cards').filterBy('location', 'f').forEach(function(card, index) {
-      self.sendAction('updateCard', card, { sortOrder: index });
+      self.sendAction('updateCard', card, { sortOrder: index, visible: true });
     });
   },
 

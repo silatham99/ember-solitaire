@@ -1,6 +1,11 @@
 body {
   background-color: #eee;
-  font-family: 'Open Sans Condensed', sans-serif;
+  font-family: "Maven Pro", "Helvetica", "Arial", sans-serif;
+
+}
+
+.playing-field {
+  padding: 20px;
 }
 
 .upper-field {
@@ -9,9 +14,10 @@ body {
 
 .finished-stacks {
   width: 50%;
+  display: inline-block;
   position: relative;
   float: right;
-  display: inline-block;
+  white-space: nowrap;
 }
 
 .finished-stacks > .finish-stack {
@@ -24,10 +30,12 @@ body {
   width: 112px;
   -moz-user-select: none;
   -khtml-user-drag: element;
+  cursor: move;
 }
 
-.playing-card.movable {
-  cursor: move;
+
+.playing-card.stackable {
+  margin-bottom: -118px;
 }
 
 .playing-card.deck {
@@ -36,6 +44,7 @@ body {
 
 .flipping-deck {
   display: inline-block;
+  margin-right: 25px;
 }
 
 .flipping-deck > .playing-card {
@@ -49,4 +58,5 @@ body {
 .card-stack {
   display: inline-block;
   margin-right: 20px;
+  vertical-align: top;
 }

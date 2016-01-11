@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-	classNameBindings: ['movable:movable', ':playing-card'],
+	classNameBindings: ['movable:movable', 'stackable:stackable', ':playing-card'],
 	attributeBindings: ['style', 'draggable'],
 
 	draggable: true,
@@ -16,6 +16,10 @@ export default Ember.Component.extend({
 	}),
 
 	imageFilePath: function() {
-		return "/images/" + this.get('card.suit') + this.get('card.cardNumber') + ".png";
-	}.property('card.suit', 'card.cardNumber')
+		if (this.get('card.visible')) {
+			return "/images/" + this.get('card.suit') + this.get('card.cardNumber') + ".png";
+		} else {
+			return "/images/ember-card.png";
+		}
+	}.property('card.suit', 'card.cardNumber', 'card.visible')
 });

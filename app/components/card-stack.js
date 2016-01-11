@@ -5,8 +5,12 @@ export default Ember.Component.extend(GameLogic, {
   classNames: ['card-stack'],
 
   didInsertElement() {
-    var cards = this.get('cards').filterBy('location', this.get('stackNumber'));
-    this.sendAction('updateCard', cards.get('lastObject'), { sortOrder: 0 });
+    var self = this,
+        cards = self.get('cards').filterBy('location', this.get('stackNumber'));
+
+    cards.forEach(function(card, index) {
+      self.sendAction('updateCard', card, { sortOrder: index, visible: ((index + 1) === cards.length) });
+    });
   },
 
   doubleClick: function() {
@@ -34,16 +38,20 @@ export default Ember.Component.extend(GameLogic, {
   },
 
   cardsInStack: function() {
-    return this.get('cards').filterBy('location', this.get('stackNumber'));
+    return this.get('cards').filterBy('location', this.get('stackNumber')).sortBy('sortOrder');
   }.property('cards.@each.location', 'stackNumber'),
 
   showingCard: function() {
-    if (!this.get('cardsInStack.length')) { return undefined; }
+    if (this.get('isEmpty')) { return undefined; }
     return this.get('cardsInStack').reduce(function(max, item) {
       if (isNaN(item.get('sortOrder'))) { return max; }
       return max.get('sortOrder') > item.get('sortOrder') ? max : item
     });
-  }.property('cardsInStack.@each.sortOrder'),
+  }.property('cardsInStack.@each.sortOrder', 'isEmpty'),
+
+  showNextCard: function() {
+    this.sendAction('updateCard', this.get('showingCard'), { visible: true });
+  }.observes('showingCard'),
 
   isEmpty: function() {
     return this.get('cardsInStack.length') === 0;

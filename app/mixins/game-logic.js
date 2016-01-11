@@ -30,9 +30,6 @@ export default Ember.Mixin.create(PlayingDeck, {
   },
 
   canStackCard: function(newCard, existingCard) {
-    if (newCard.get('cardNumber') === 'k') {
-      debugger;
-    }
     if (!existingCard) {
       return true;
     } else if (existingCard.get('cardNumber') === 'a') {
