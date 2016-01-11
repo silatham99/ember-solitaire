@@ -11,9 +11,9 @@ export default Ember.Component.extend({
     return event.dataTransfer.setData('card', JSON.stringify(card));
   },
 
-	style: function() {
+	style: Ember.computed('imageFilePath', function() {
 		return 'background-image: url("' + this.get('imageFilePath') + '"); background-size: 100%;';
-	}.property('imageFilePath'),
+	}),
 
 	imageFilePath: function() {
 		return "/images/" + this.get('card.suit') + this.get('card.cardNumber') + ".png";

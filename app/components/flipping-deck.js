@@ -6,36 +6,43 @@ export default Ember.Component.extend(GameLogic, {
 
   deckPosition: 0,
 
-  cardsInStack: function() {
-    return this.get('cards').filterBy('location', 'f');
-  }.property('cards.@each.location'),
+  didInsertElement() {
+    var self = this;
+    self.get('cards').filterBy('location', 'f').forEach(function(card, index) {
+      self.sendAction('updateCard', card, { sortOrder: index });
+    });
+  },
 
-  showingCards: function() {
+  cardsInStack: Ember.computed('cards.@each.location', function() {
+    return this.get('cards').filterBy('location', 'f');
+  }),
+
+  showingCards: Ember.computed('deckPosition', 'nextPosition', function() {
     if (this.get('nextPosition') > this.get('deckPosition')) {
       return this.get('cardsInStack').slice(this.get('deckPosition'), this.get('nextPosition'));
     } else {
       return this.get('cardsInStack').slice(this.get('deckPosition'), this.get('cardsInStack.length'));
     }
-  }.property('deckPosition', 'nextPosition', 'cardsInStack.length'),
+  }),
 
-  nextPosition: function() {
+  nextPosition: Ember.computed('deckPosition', 'cardsInStack.length', function() {
     if (this.get('cardsInStack.length') > this.get('deckPosition') + 3) {
       return this.get('deckPosition') + 3;
     } else {
       return this.get('cardsInStack.length') - this.get('deckPosition');
     }
-  }.property('deckPosition', 'cardsInStack.length'),
+  }),
 
-  click: function(event) {
+  click(event) {
     if ($(event.target).hasClass('deck')) {
       this.set('deckPosition', this.get('nextPosition'));
     }
   },
 
-  doubleClick: function(event) {
+  doubleClick(event) {
     var card = this.get('showingCards.lastObject');
     if (this.canFinishCard(this.get('cards'), card)) {
-      this.sendAction('moveCard', card, card.get('suit'));
+      this.sendAction('updateCard', card, { location: card.get('suit') });
     }
   }
 });

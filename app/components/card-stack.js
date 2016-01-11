@@ -4,9 +4,14 @@ import GameLogic from '../mixins/game-logic';
 export default Ember.Component.extend(GameLogic, {
   classNames: ['card-stack'],
 
+  didInsertElement() {
+    var cards = this.get('cards').filterBy('location', this.get('stackNumber'));
+    this.sendAction('updateCard', cards.get('lastObject'), { sortOrder: 0 });
+  },
+
   doubleClick: function() {
     if (this.canFinishCard(this.get('cards'), this.get('showingCard'))) {
-      this.sendAction('moveCard', this.get('showingCard'), this.get('showingCard.suit'));
+      this.sendAction('updateCard', this.get('showingCard'), { location: this.get('showingCard.suit') });
     }
   },
 
@@ -15,9 +20,16 @@ export default Ember.Component.extend(GameLogic, {
   },
 
   drop: function(event) {
-    var card = JSON.parse(event.dataTransfer.getData('card'));
+    var dropData = event.dataTransfer.getData('card');
+    if (!dropData) { return false; }
+    var card = JSON.parse(dropData);
     if (this.canStackCard(Ember.Object.create(card), this.get('showingCard'))) {
-      this.sendAction('moveCard', card.id, this.get('stackNumber'));
+      if (isNaN(this.get('showingCard.sortOrder'))) {
+        var newSortOrder = 0;
+      } else {
+        var newSortOrder = this.get('showingCard.sortOrder') + 1;
+      }
+      this.sendAction('updateCard', card.id, { location: this.get('stackNumber'), sortOrder: newSortOrder });
     }
   },
 
@@ -26,8 +38,12 @@ export default Ember.Component.extend(GameLogic, {
   }.property('cards.@each.location', 'stackNumber'),
 
   showingCard: function() {
-    return this.get('cardsInStack.lastObject');
-  }.property('cardsInStack'),
+    if (!this.get('cardsInStack.length')) { return undefined; }
+    return this.get('cardsInStack').reduce(function(max, item) {
+      if (isNaN(item.get('sortOrder'))) { return max; }
+      return max.get('sortOrder') > item.get('sortOrder') ? max : item
+    });
+  }.property('cardsInStack.@each.sortOrder'),
 
   isEmpty: function() {
     return this.get('cardsInStack.length') === 0;

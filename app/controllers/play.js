@@ -3,17 +3,21 @@ import GameLogic from '../mixins/game-logic';
 
 export default Ember.Controller.extend(GameLogic, {
   actions: {
-    moveCard: function(card, newLocation) {
-      var finishStacks = ['s','c','h','d'],
-          cardStacks = ['a', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'j', 'q', 'k'];
-
+    updateCard: function(card, params) {
+      if (typeof params !== 'object') { return false; }
       if (typeof card === "string") {
         card = this.store.getById('card', card);
       }
-
-      if (finishStacks.indexOf(newLocation) !== -1 || cardStacks.indexOf(newLocation) !== -1) {
-        card.set('location', newLocation);
-      }
+      Object.keys(params).forEach(function(attribute) {
+        if (attribute === 'location') {
+          if (['s','c','h','d'].indexOf(params[attribute]) !== -1 ||
+              [1, 2, 3, 4, 5, 6, 7].indexOf(params[attribute]) !== -1) {
+            card.set(attribute, params[attribute]);
+          }
+        } else {
+          card.set(attribute, params[attribute]);
+        }
+      })
     }
   }
 });
