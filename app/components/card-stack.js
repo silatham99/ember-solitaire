@@ -24,15 +24,12 @@ export default Ember.Component.extend(GameLogic, {
   },
 
   drop(event) {
-    var dropData = event.dataTransfer.getData('card');
+    var dropData = event.dataTransfer.getData('card'),
+        card, newSortOrder;
     if (!dropData) { return false; }
-    var card = JSON.parse(dropData);
+    card = JSON.parse(dropData);
     if (this.canStackCard(Ember.Object.create(card), this.get('showingCard'))) {
-      if (isNaN(this.get('showingCard.sortOrder'))) {
-        var newSortOrder = 0;
-      } else {
-        var newSortOrder = this.get('showingCard.sortOrder') + 1;
-      }
+      newSortOrder = isNaN(this.get('showingCard.sortOrder')) ? 0 : this.get('showingCard.sortOrder') + 1;
       this.sendAction('updateCard', card.id, { location: this.get('stackNumber'), sortOrder: newSortOrder });
     }
   },
@@ -49,13 +46,14 @@ export default Ember.Component.extend(GameLogic, {
     });
   }),
 
-  showNextCard: Ember.computed('cardsInStack.@each.visible', function() {
+  showNextCard: Ember.observer('cardsInStack.[]', function() {
+    if (!this.get('showingCard')) { return; }
     if (this.get('cardsInStack').filterBy('visible', true).length === 0) {
       return this.sendAction('updateCard', this.get('showingCard'), { visible: true });
     }
   }),
 
-  isEmpty: Ember.computed('cardsInStack.length', function() {
+  isEmpty: Ember.computed('cardsInStack.[]', function() {
     return this.get('cardsInStack.length') === 0;
   })
 });
