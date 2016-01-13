@@ -1,7 +1,6 @@
 {{#if isEmpty}}
 	{{partial 'empty-card'}}
 {{else}}
-	{{#each cardsInStack as |card|}}
-  	{{playing-card card=card movable=true stackable=true}}
-	{{/each}}
+	{{fixed-stack cards=fixedCardsInStack}}
+	{{draggable-stack cards=draggableCardsInStack begin=true}}
 {{/if}}

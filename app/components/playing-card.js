@@ -1,11 +1,11 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-	classNameBindings: ['movable:movable', 'stackable:stackable', ':playing-card'],
+	classNameBindings: ['stackable:stackable', ':playing-card'],
 	attributeBindings: ['draggable'],
 
-	draggable: Ember.computed('card.visible', function() {
-		return this.get('card.visible');
+	draggable: Ember.computed('card.visible', 'stacked', function() {
+		return this.get('card.visible') && !this.get('stacked');
 	}),
 
 	dragStart: function(event) {

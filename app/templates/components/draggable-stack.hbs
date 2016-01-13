@@ -1,0 +1,15 @@
+{{#if continueStacking}}
+  {{#if begin}}
+    {{playing-card card=card stackable=true stacked=true}}
+    {{#draggable-stack cards=remainingCards}}
+      {{playing-card card=nextCard stackable=true stacked=true}}
+    {{/draggable-stack}}
+  {{else}}
+    {{yield}}
+    {{#draggable-stack cards=remainingCards}}
+      {{playing-card card=card stackable=true stacked=true}}
+    {{/draggable-stack}}
+  {{/if}}
+{{else}}
+  {{playing-card card=card stackable=true}}
+{{/if}}

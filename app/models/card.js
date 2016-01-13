@@ -6,6 +6,7 @@ export default DS.Model.extend({
   location: DS.attr(),
   sortOrder: DS.attr(),
   visible: DS.attr(),
+  draggable: DS.attr(),
   photoSrc: function() {
     if (this.get('visible')) {
 			return "images/cards/" + this.get('suit') + this.get('cardNumber') + ".png";

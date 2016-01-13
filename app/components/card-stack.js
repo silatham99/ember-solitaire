@@ -35,7 +35,15 @@ export default Ember.Component.extend(GameLogic, {
   },
 
   cardsInStack: Ember.computed('cards.@each.location', 'stackNumber', function() {
-    return this.get('cards').filterBy('location', this.get('stackNumber')).sortBy('sortOrder');
+    return this.get('cards').filterBy('location', this.get('stackNumber'));
+  }),
+
+  fixedCardsInStack: Ember.computed('cardsInStack.@each.visible', function() {
+    return this.get('cardsInStack').filterBy('visible', false);
+  }),
+
+  draggableCardsInStack: Ember.computed('cardsInStack.@each.visible', function() {
+    return this.get('cardsInStack').filterBy('visible', true);
   }),
 
   showingCard: Ember.computed('cardsInStack.@each.sortOrder', 'isEmpty', function() {
